@@ -1,5 +1,13 @@
 version: '3'
 services:
+  app_go:
+    build: ./app_go
+    restart: unless-stopped
+    ports:
+      - "8443:8443"
+    volumes:
+      - ./data/nginx:/data
+      - ./webroot:/var/www/html
   nginx:
     build: ./web
     restart: unless-stopped
@@ -20,8 +28,8 @@ services:
     image: andyshinn/dnsmasq
     container_name: dnsmasq
     ports:
-      - "53:53/udp"
-      - "53:53/tcp"
+      - "8053:53/udp"
+      - "8053:53/tcp"
     cap_add:
       - NET_ADMIN
     extra_hosts:
