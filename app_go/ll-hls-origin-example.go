@@ -59,7 +59,7 @@ type logValues struct {
 
 const (
 	index               = "prog_index.m3u8"
-	playListEndPoint    = "lowLatencyHLS.php"
+	playListEndPoint    = "lowLatencyHLS.m3u8"
 	segmentEndPoint     = "lowLatencySeg"
 	serverVersionString = "ll-hls/golang/0.1"
 	canSkipUntil        = 6
@@ -368,8 +368,9 @@ func getReportFor(current, target string) string {
 	}
 	p := mediaPlaylist.LastPart()
 	m := mediaPlaylist.LastMSN()
-	topLevelPath := filepath.Dir("/" + current + "/../../..") // current is the current lowLatencyHL
-	return fmt.Sprintf("#EXT-X-RENDITION-REPORT:URI=\"%s/%s/"+playListEndPoint+"\",LAST-MSN=%d,LAST-PART=%d\n", topLevelPath, target, m, p)
+	topLevelPath := filepath.Dir("/" + current + "/../../..") // current is the current lowLatencyHLS.m3u8 path
+	uriString := filepath.Clean(fmt.Sprintf("%s/%s/%s", topLevelPath, target, playListEndPoint))
+	return fmt.Sprintf("#EXT-X-RENDITION-REPORT:URI=\"%s\",LAST-MSN=%d,LAST-PART=%d\n", uriString, m, p)
 }
 
 func sendError(w http.ResponseWriter, r *http.Request, err error, status int, l logValues) {
